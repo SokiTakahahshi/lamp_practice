@@ -1,9 +1,11 @@
 <?php
+//functions.phpを読み込み
 require_once MODEL_PATH . 'functions.php';
+//db.phpの読み込み
 require_once MODEL_PATH . 'db.php';
 
 // DB利用
-
+//itemsのitem_idをselect
 function get_item($db, $item_id){
   $sql = "
     SELECT
@@ -21,7 +23,7 @@ function get_item($db, $item_id){
   $params = array($item_id);
   return fetch_query($db, $sql,$params);
 }
-
+//itemsをselect
 function get_items($db, $is_open = false){
   $sql = '
     SELECT
@@ -34,14 +36,16 @@ function get_items($db, $is_open = false){
     FROM
       items
   ';
+  //$is_openがtrueなら
   if($is_open === true){
+    //$sqlにstatus=1を代入
     $sql .= '
       WHERE status = 1
     ';
   }
   return fetch_all_query($db, $sql);
 }
-
+//get_itemsにデータベース接続
 function get_all_items($db){
   return get_items($db);
 }
@@ -49,22 +53,27 @@ function get_all_items($db){
 function get_open_items($db){
   return get_items($db, true);
 }
-
+//$filenameに$imageのファイルをアップロード
 function regist_item($db, $name, $price, $stock, $status, $image){
   $filename = get_upload_filename($image);
+  //falseだった場合falseを返す
   if(validate_item($name, $price, $stock, $filename, $status) === false){
     return false;
   }
+  //トランザクション処理
   return regist_item_transaction($db, $name, $price, $stock, $status, $image, $filename);
 }
 
 function regist_item_transaction($db, $name, $price, $stock, $status, $image, $filename){
+  //トランザクション開始
   $db->beginTransaction();
   if(insert_item($db, $name, $price, $stock, $filename, $status) 
     && save_image($image, $filename)){
+      //コミット処理
     $db->commit();
     return true;
   }
+  //ロールバック処理
   $db->rollback();
   return false;
   
@@ -72,6 +81,7 @@ function regist_item_transaction($db, $name, $price, $stock, $status, $image, $f
 
 function insert_item($db, $name, $price, $stock, $filename, $status){
   $status_value = PERMITTED_ITEM_STATUSES[$status];
+  //INSERT INTO
   $sql = "
     INSERT INTO
       items(
@@ -88,6 +98,7 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
 }
 
 function update_item_status($db, $item_id, $status){
+  //UPDATE
   $sql = "
     UPDATE
       items
@@ -102,6 +113,7 @@ function update_item_status($db, $item_id, $status){
 }
 
 function update_item_stock($db, $item_id, $stock){
+  //UPDATE
   $sql = "
     UPDATE
       items
