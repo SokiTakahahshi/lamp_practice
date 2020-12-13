@@ -19,4 +19,6 @@ if(is_admin($user) === false){
 }
 
 $items = get_all_items($db);
+//変数に戻り値
+$token = get_csrf_token();
 include_once VIEW_PATH . '/admin_view.php';

@@ -7,5 +7,6 @@ session_start();
 if(is_logined() === true){
   redirect_to(HOME_URL);
 }
-
+//変数に戻り値
+$token = get_csrf_token();
 include_once VIEW_PATH . 'login_view.php';

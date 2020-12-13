@@ -46,6 +46,7 @@ define('PERMITTED_ITEM_STATUSES', array(
 ));
 
 define('PERMITTED_IMAGE_TYPES', array(
+  //定数
   IMAGETYPE_JPEG => 'jpg',
   IMAGETYPE_PNG => 'png',
 ));

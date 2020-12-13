@@ -9,6 +9,13 @@ if(is_logined() === true){
   redirect_to(HOME_URL);
 }
 
+//formから送られてきたトークンを取得
+$token = get_post('token');
+if(is_valid_csrf_token($token)===false){
+  set_error('不正なページ移動です。');
+  redirect_to(SIGNUP_URL);
+}
+
 $name = get_post('name');
 $password = get_post('password');
 $password_confirmation = get_post('password_confirmation');
