@@ -1,5 +1,5 @@
 <?php
-
+//定数　第二引数を、第一引数にいれる
 define('MODEL_PATH', $_SERVER['DOCUMENT_ROOT'] . '/../model/');
 define('VIEW_PATH', $_SERVER['DOCUMENT_ROOT'] . '/../view/');
 
