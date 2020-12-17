@@ -1,0 +1,2 @@
+CREATE TABLE `sample`.`orders` ( `order_id` INT NOT NULL AUTO_INCREMENT , `user_id` INT NOT NULL , `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`order_id`)) ENGINE = InnoDB;
+CREATE TABLE `sample`.`buy` ( `buy_id` INT NOT NULL AUTO_INCREMENT , `amount` INT NOT NULL , `price` INT NOT NULL , `order_id` INT NOT NULL , `item_id` INT NOT NULL , `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`buy_id`)) ENGINE = InnoDB;

@@ -19,14 +19,14 @@ if(is_valid_csrf_token($token)===false){
 $db = get_db_connect();
 
 $user = get_login_user($db);
-
+//falseだった場合リダイレクト
 if(is_admin($user) === false){
   redirect_to(LOGIN_URL);
 }
-
+//postを変数に代入
 $item_id = get_post('item_id');
 
-
+//商品削除
 if(destroy_item($db, $item_id) === true){
   set_message('商品を削除しました。');
 } else {

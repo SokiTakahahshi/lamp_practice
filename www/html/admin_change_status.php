@@ -19,14 +19,14 @@ if(is_valid_csrf_token($token)===false){
 $db = get_db_connect();
 
 $user = get_login_user($db);
-
+//falseだった場合リダイレクト
 if(is_admin($user) === false){
   redirect_to(LOGIN_URL);
 }
-
+//postを変数に代入
 $item_id = get_post('item_id');
 $changes_to = get_post('changes_to');
-
+//ステータスの変更
 if($changes_to === 'open'){
   update_item_status($db, $item_id, ITEM_STATUS_OPEN);
   set_message('ステータスを変更しました。');
