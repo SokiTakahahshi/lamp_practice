@@ -111,11 +111,28 @@ function delete_cart($db, $cart_id){
   return execute_query($db, $sql,$params);
 }
 
-function purchase_carts($db, $carts){
+function purchase_carts($db, $carts,$user_id){
+  //トランザクション開始
+  $db->beginTransaction();
+  $order_id = 0;
   //$cartsの中身が0じゃないとき
   if(validate_cart_purchase($carts) === false){
     return false;
   }
+  //ordersテーブル
+  $sql ="
+    INSERT INTO
+    orders(
+      user_id
+      )
+    VALUES(?)  
+      ";
+    $params = array($user_id);
+    if(execute_query($db, $sql,$params)===false){
+      set_error('オーダテーブルの挿入に失敗しました。');
+    }else{
+      $order_id = $db->lastInsertId('order_id');
+    }    
   foreach($carts as $cart){
     //UPDATE
     if(update_item_stock(
@@ -126,10 +143,34 @@ function purchase_carts($db, $carts){
       //stockからamountを正常に引けなかったらエラー  
       set_error($cart['name'] . 'の購入に失敗しました。');
     }
+    //buyテーブル
+    $sql = "
+    INSERT INTO
+    buy(
+      amount,
+      price,
+      order_id,
+      item_id
+      )
+      VALUES(?,?,?,?)
+      ";
+      $params = array($cart['amount'],$cart['price'],$order_id,$cart['item_id']);
+      if(execute_query($db, $sql,$params)===false){
+        set_error('バイテーブルの挿入に失敗しました。');
+      };
   }
   //user_idのcartの中身をdelete
   delete_user_carts($db, $carts[0]['user_id']);
-}
+  if(has_error() === false){
+  //コミット処理
+  $db->commit();
+  return true;
+  }else{
+   //ロールバック
+   $db->rollback();
+   return false;
+  }  
+  }
 
 function delete_user_carts($db, $user_id){
   //user_idをdelete
