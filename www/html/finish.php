@@ -20,11 +20,12 @@ if(is_valid_csrf_token($token)===false){
 
 $db = get_db_connect();
 $user = get_login_user($db);
-
+//カートの中身を取得
 $carts = get_user_carts($db, $user['user_id']);
 
-if(purchase_carts($db, $carts) === false){
+if(purchase_carts($db, $carts,$user['user_id']) === false){
   set_error('商品が購入できませんでした。');
+  //購入処理
   redirect_to(CART_URL);
 } 
 
