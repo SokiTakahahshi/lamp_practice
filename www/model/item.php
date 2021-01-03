@@ -53,6 +53,34 @@ function get_all_items($db){
 function get_open_items($db){
   return get_items($db, true);
 }
+
+function get_ranking($db){
+  $sql = '
+  SELECT
+      items.item_id, 
+      name,
+      stock,
+      items.price,
+      image,
+      status
+    FROM
+      items
+    JOIN
+      buy
+    ON
+      items.item_id = buy.item_id
+    WHERE
+      items.status = 1
+    GROUP BY
+      buy.item_id
+    ORDER BY
+       SUM(amount) DESC
+    LIMIT 
+       3
+    ';  
+  return fetch_all_query($db,$sql);  
+}
+
 //$filenameに$imageのファイルをアップロード
 function regist_item($db, $name, $price, $stock, $status, $image){
   $filename = get_upload_filename($image);
