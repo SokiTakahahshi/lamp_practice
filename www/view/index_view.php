@@ -42,6 +42,39 @@
       <?php } ?>
       </div>
     </div>
+  <!--ランキング-->  
+    <div>
+    　<h1>ランキング</h1>
+    　<div class="card-deck">
+      <div class="row">
+      <?php foreach($ranking as $key => $item){ ?>
+        <div class="col-6 item">
+          <div class="card h-100 text-center">
+            <div class="card-header">
+              <?php print number_format($key+1); ?>位
+              <?php print (h($item['name'])); ?>
+            </div>
+            <figure class="card-body">
+              <img class="card-img" src="<?php print(IMAGE_PATH . $item['image']); ?>">
+              <figcaption>
+                <?php print(number_format($item['price'])); ?>円
+                <?php if($item['stock'] > 0){ ?>
+                  <form action="index_add_cart.php" method="post">
+                    <input type="hidden" name="token" value="<?php print $token; ?>">
+                    <input type="submit" value="カートに追加" class="btn btn-primary btn-block">
+                    <input type="hidden" name="item_id" value="<?php print($item['item_id']); ?>">
+                  </form>
+                <?php } else { ?>
+                  <p class="text-danger">現在売り切れです。</p>
+                <?php } ?>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      <?php } ?>
+      </div>
+    </div>
+    </div>
   </div>
   
 </body>
